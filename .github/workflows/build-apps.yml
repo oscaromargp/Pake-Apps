@@ -2,8 +2,6 @@ name: Build Pake Apps (NexusOS, Spotify, WhatsApp)
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
 
 jobs:
   build-nexusos:
@@ -12,9 +10,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./
+        id: nexusos
         with:
           url: "https://nexus-os-chi.vercel.app"
           name: "NexusOS"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NexusOS
+          path: ${{ steps.nexusos.outputs.package-path }}
 
   build-spotify:
     name: Build Spotify
@@ -22,9 +25,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./
+        id: spotify
         with:
           url: "https://open.spotify.com"
           name: "Spotify"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Spotify
+          path: ${{ steps.spotify.outputs.package-path }}
 
   build-whatsapp:
     name: Build WhatsApp
@@ -32,6 +40,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./
+        id: whatsapp
         with:
           url: "https://web.whatsapp.com"
           name: "WhatsApp"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: WhatsApp
+          path: ${{ steps.whatsapp.outputs.package-path }}
