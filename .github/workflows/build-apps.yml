@@ -9,42 +9,69 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./
-        id: nexusos
-        with:
-          url: "https://nexus-os-chi.vercel.app"
-          name: "NexusOS"
-      - uses: actions/upload-artifact@v4
+      - name: Install dependencies
+        shell: pwsh
+        run: |
+          pnpm install 2>&1
+      - name: Build CLI
+        shell: pwsh
+        run: |
+          pnpm run cli:build 2>&1
+      - name: Build NexusOS App
+        shell: pwsh
+        run: |
+          $env:PAKE_CREATE_APP = "1"
+          node dist/cli.js https://nexus-os-chi.vercel.app --name NexusOS 2>&1
+      - name: Upload MSI
+        uses: actions/upload-artifact@v4
         with:
           name: NexusOS
-          path: ${{ steps.nexusos.outputs.package-path }}
+          path: src-tauri/target/**/*.msi
 
   build-spotify:
     name: Build Spotify
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./
-        id: spotify
-        with:
-          url: "https://open.spotify.com"
-          name: "Spotify"
-      - uses: actions/upload-artifact@v4
+      - name: Install dependencies
+        shell: pwsh
+        run: |
+          pnpm install 2>&1
+      - name: Build CLI
+        shell: pwsh
+        run: |
+          pnpm run cli:build 2>&1
+      - name: Build Spotify App
+        shell: pwsh
+        run: |
+          $env:PAKE_CREATE_APP = "1"
+          node dist/cli.js https://open.spotify.com --name Spotify 2>&1
+      - name: Upload MSI
+        uses: actions/upload-artifact@v4
         with:
           name: Spotify
-          path: ${{ steps.spotify.outputs.package-path }}
+          path: src-tauri/target/**/*.msi
 
   build-whatsapp:
     name: Build WhatsApp
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./
-        id: whatsapp
-        with:
-          url: "https://web.whatsapp.com"
-          name: "WhatsApp"
-      - uses: actions/upload-artifact@v4
+      - name: Install dependencies
+        shell: pwsh
+        run: |
+          pnpm install 2>&1
+      - name: Build CLI
+        shell: pwsh
+        run: |
+          pnpm run cli:build 2>&1
+      - name: Build WhatsApp App
+        shell: pwsh
+        run: |
+          $env:PAKE_CREATE_APP = "1"
+          node dist/cli.js https://web.whatsapp.com --name WhatsApp 2>&1
+      - name: Upload MSI
+        uses: actions/upload-artifact@v4
         with:
           name: WhatsApp
-          path: ${{ steps.whatsapp.outputs.package-path }}
+          path: src-tauri/target/**/*.msi
